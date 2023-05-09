@@ -80,11 +80,11 @@ def get_content(shard, query, low_price, top_price):
     for page in range(1, 101):
         print(f'Сбор позиций со страницы {page} из 100')
         url = f'https://catalog.wb.ru/catalog/{shard}/catalog?appType=1&curr=rub' \
-              f'&dest=-1075831,-77677,-398551,12358499,-446087' \
+              f'&dest=-1075831,-77677,-398551,12358499,-446087,-1257786' \
               f'&locale=ru' \
               f'&page={page}' \
               f'&priceU={low_price * 100};{top_price * 100}' \
-              f'&reg=0&regions=64,83,4,38,80,33,70,82,86,30,69,1,48,22,66,31,40&sort=popular&spp=99' \
+              f'&reg=0&regions=64,83,4,38,80,33,70,82,86,30,69,1,48,22,66,31,40,80,64,38,4,115,83,33,68,70,69,30,86,75,40,1,66,48,110,31,22,71,114&sort=popular&spp=99' \
               f'&{query}'
         r = requests.get(url, headers=headers)
         data = r.json()
@@ -138,11 +138,24 @@ if __name__ == '__main__':
     # url = 'https://www.wildberries.ru/catalog/elektronika/noutbuki-pereferiya/periferiynye-ustroystva/mfu'
     # url = 'https://www.wildberries.ru/catalog/dlya-doma/predmety-interera/dekorativnye-nakleyki'
     # url = 'https://www.wildberries.ru/catalog/dlya-doma/predmety-interera/boksy-dlya-salfetok'
-    url = 'https://www.wildberries.ru/catalog/dlya-doma/vse-dlya-prazdnika/otkrytki'
-    low_price = 1000
-    top_price = 50000
+    # url = 'https://www.wildberries.ru/catalog/dlya-doma/vse-dlya-prazdnika/otkrytki'
+    # low_price = 1000
+    # top_price = 50000
+    #
+    # parser(url=url,
+    #        low_price=low_price,
+    #        top_price=top_price
+    #        )
 
-    parser(url=url,
-           low_price=low_price,
-           top_price=top_price
-           )
+    """для exe приложения(чтобы сделать exe файл - pip install auto_py_to_exe для установки, для запуска auto-py-to-exe)"""
+    while True:
+        try:
+            url = input('Введите ссылку на категорию для сбора(или "q" для выхода): ')
+            if url == 'q':
+                break
+            low_price = int(input('Введите минимальную сумму товара: '))
+            top_price = int(input('Введите максимульную сумму товара: '))
+            parser(url=url, low_price=low_price, top_price=top_price)
+        except:
+            print('произошла ошибка данных при вводе, проверте правильность введенных данных,\n'
+                  'Перезапуск...')
