@@ -15,7 +15,7 @@ https://happypython.ru/2022/07/21/парсер-wildberries/
 Ссылка на статью ВКонтакте: https://vk.com/@happython-parser-wildberries
 По всем возникшим вопросам, можете писать в группу https://vk.com/happython
 
-парсер wildberries по каталогам 2023, обновлен 09.05.2023 - на данное число работает исправно
+парсер wildberries по каталогам 2023, обновлен 18.05.2023 - на данное число работает исправно
 """
 
 
@@ -150,6 +150,8 @@ if __name__ == '__main__':
     """для exe приложения(чтобы сделать exe файл - pip install auto_py_to_exe для установки, для запуска auto-py-to-exe)"""
     while True:
         try:
+            print('По вопросу парсинга Wildberries, отзывам и предложениям пишите в https://vk.com/happython'
+                  '\nПодробная информация по парсеру представлена в статье: https://happypython.ru/2022/07/21/парсер-wildberries/\n')
             url = input('Введите ссылку на категорию для сбора(или "q" для выхода): ')
             if url == 'q':
                 break
