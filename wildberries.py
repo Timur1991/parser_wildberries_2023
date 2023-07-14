@@ -1,6 +1,5 @@
 import datetime
 import time
-
 import requests
 import json
 import pandas as pd
@@ -21,7 +20,7 @@ https://happypython.ru/2022/07/21/парсер-wildberries/
 Ссылка на статью ВКонтакте: https://vk.com/@happython-parser-wildberries
 По всем возникшим вопросам, можете писать в группу https://vk.com/happython
 
-парсер wildberries по каталогам 2023, обновлен 18.05.2023 - на данное число работает исправно
+парсер wildberries по каталогам 2023, обновлен 14.07.2023 - на данное число работает исправно
 """
 
 
@@ -100,7 +99,7 @@ def get_content(shard: str, query: str, low_price: int, top_price: int) -> list:
               f'&locale=ru' \
               f'&page={page}' \
               f'&priceU={low_price * 100};{top_price * 100}' \
-              f'&reg=0&sort=popular&spp=0' \
+              f'&sort=popular&spp=0' \
               f'&{query}'
         r = requests.get(url, headers=headers)
         if r.status_code != 200:
