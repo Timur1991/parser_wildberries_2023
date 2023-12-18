@@ -1,42 +1,47 @@
 import datetime
-
 import requests
 import json
 import pandas as pd
 from retry import retry
 # pip install openpyxl
-
+# pip install xlsxwriter
 
 """
-ОБНОВЛЕН: 28.08.2023
+ОБНОВЛЕН: 18.12.2023 (статус "работает" - добавлены новые поля данных, улучшен вывод данных в excel)
+ОБНОВЛЕН: 28.08.2023 (сменилась ссылка на каталог)
 
 https://vk.com/parsers_wildberries  # группа ВК парсера ВБ
 https://vk.com/happython  # группа ВК где можете заказывать парсеры и скрипты
 https://happypython.ru/2022/07/21/парсер-wildberries/  # ссылка на обучающую статью парсинга WB
 
 Парсер wildberries по ссылке на каталог (указывать без фильтров)
-Данные которые собирает парсер:
-    -наименование
-    -id
-    -скидка
-    -цена
-    -цена со скидкой
-    -бренд
-    -отзывы
-    -рейтинг
-    -ссылка
 
-Возможные фильтра: 
+Возможные фильтра(для ручного ввода): 
     -нижняя цена
     -верхняя цена
     -скидка (%)
+Данные которые собирает парсер:
+            'id': артикуд,
+            'name': название,
+            'price': цена,
+            'salePriceU': цена со скидкой,
+            'sale': % скидки,
+            'brand': бренд,
+            'rating': рейтинг товара,
+            'supplier': продавец,
+            'supplierRating': рейтинг продавца,
+            'feedbacks': отзывы,
+            'reviewRating': рейтинг по отзывам,
+            'promoTextCard': промо текст карточки,
+            'promoTextCat': промо текст категории
 """
 
 
 def get_catalogs_wb() -> dict:
     """получаем полный каталог Wildberries"""
     # url = 'https://www.wildberries.ru/webapi/menu/main-menu-ru-ru.json'   # устарела ссылка апи
-    url = 'https://static-basket-01.wb.ru/vol0/data/main-menu-ru-ru-v2.json'
+    # url = 'https://static-basket-01.wb.ru/vol0/data/main-menu-ru-ru-v2.json'   # устарела ссылка апи
+    url = 'https://static-basket-01.wbbasket.ru/vol0/data/main-menu-ru-ru-v2.json'
     headers = {'Accept': '*/*', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
     # with open('wb_goods_list.json', 'w', encoding='UTF-8') as file:
     #     json.dump(requests.get(url, headers=headers).json(), file, indent=4, ensure_ascii=False)
@@ -73,17 +78,36 @@ def get_data_from_json(json_file: dict) -> list:
     """извлекаем из json данные"""
     data_list = []
     for data in json_file['data']['products']:
+        sku = data.get('id')
+        name = data.get('name')
+        price = int(data.get("priceU") / 100)
+        salePriceU = int(data.get('salePriceU') / 100)
+        sale = data.get('sale')
+        brand = data.get('brand')
+        rating = data.get('rating')
+        supplier = data.get('supplier')
+        supplierRating = data.get('supplierRating')
+        feedbacks = data.get('feedbacks')
+        reviewRating = data.get('reviewRating')
+        promoTextCard = data.get('promoTextCard')
+        promoTextCat = data.get('promoTextCat')
         data_list.append({
-            'Наименование': data['name'],
-            'id': data['id'],
-            'Скидка': data['sale'],
-            'Цена': int(data["priceU"] / 100),
-            'Цена со скидкой': int(data["salePriceU"] / 100),
-            'Бренд': data['brand'],
-            'feedbacks': data['feedbacks'],
-            'rating': data['rating'],
-            'Ссылка': f'https://www.wildberries.ru/catalog/{data["id"]}/detail.aspx?targetUrl=BP'
+            'id': sku,
+            'name': name,
+            'price': price,
+            'salePriceU': salePriceU,
+            'sale': sale,
+            'brand': brand,
+            'rating': rating,
+            'supplier': supplier,
+            'supplierRating': supplierRating,
+            'feedbacks': feedbacks,
+            'reviewRating': reviewRating,
+            'promoTextCard': promoTextCard,
+            'promoTextCat': promoTextCat,
+            'link': f'https://www.wildberries.ru/catalog/{data.get("id")}/detail.aspx?targetUrl=BP'
         })
+        # print(f"SKU:{data['id']} Цена: {int(data['salePriceU'] / 100)} Название: {data['name']} Рейтинг: {data['rating']}")
     return data_list
 
 
@@ -122,7 +146,22 @@ def save_excel(data: list, filename: str):
     """сохранение результата в excel файл"""
     df = pd.DataFrame(data)
     writer = pd.ExcelWriter(f'{filename}.xlsx')
-    df.to_excel(writer, 'data')
+    df.to_excel(writer, sheet_name='data', index=False)
+    # указываем размеры каждого столбца в итоговом файле
+    writer.sheets['data'].set_column(0, 1, width=10)
+    writer.sheets['data'].set_column(1, 2, width=34)
+    writer.sheets['data'].set_column(2, 3, width=8)
+    writer.sheets['data'].set_column(3, 4, width=9)
+    writer.sheets['data'].set_column(4, 5, width=4)
+    writer.sheets['data'].set_column(5, 6, width=10)
+    writer.sheets['data'].set_column(6, 7, width=5)
+    writer.sheets['data'].set_column(7, 8, width=25)
+    writer.sheets['data'].set_column(8, 9, width=10)
+    writer.sheets['data'].set_column(9, 10, width=11)
+    writer.sheets['data'].set_column(10, 11, width=13)
+    writer.sheets['data'].set_column(11, 12, width=19)
+    writer.sheets['data'].set_column(12, 13, width=19)
+    writer.sheets['data'].set_column(13, 14, width=67)
     writer.close()
     print(f'Все сохранено в {filename}.xlsx\n')
 
@@ -160,8 +199,9 @@ def parser(url: str, low_price: int = 1, top_price: int = 1000000, discount: int
 
 if __name__ == '__main__':
     """данные для теста. собераем товар с раздела велосипеды в ценовой категории от 1тыс, до 100тыс, со скидкой 10%"""
-    url = 'https://www.wildberries.ru/catalog/sport/vidy-sporta/velosport/velosipedy'
-    low_price = 1  # нижний порог цены
+    # url = 'https://www.wildberries.ru/catalog/sport/vidy-sporta/velosport/velosipedy'
+    url = 'https://www.wildberries.ru/catalog/elektronika/planshety'  # сюда вставляем вашу ссылку на категорию
+    low_price = 100  # нижний порог цены
     top_price = 1000000  # верхний порог цены
     discount = 10  # скидка в %
     start = datetime.datetime.now()  # запишем время старта
