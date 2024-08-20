@@ -83,6 +83,7 @@ def get_data_from_json(json_file: dict) -> list:
         name = data.get('name')
         price = int(data.get("priceU") / 100)
         salePriceU = int(data.get('salePriceU') / 100)
+        cashback = data.get('feedbackPoints')
         sale = data.get('sale')
         brand = data.get('brand')
         rating = data.get('rating')
@@ -97,6 +98,7 @@ def get_data_from_json(json_file: dict) -> list:
             'name': name,
             'price': price,
             'salePriceU': salePriceU,
+            'cashback': cashback,
             'sale': sale,
             'brand': brand,
             'rating': rating,
@@ -153,16 +155,17 @@ def save_excel(data: list, filename: str):
     writer.sheets['data'].set_column(1, 2, width=34)
     writer.sheets['data'].set_column(2, 3, width=8)
     writer.sheets['data'].set_column(3, 4, width=9)
-    writer.sheets['data'].set_column(4, 5, width=4)
-    writer.sheets['data'].set_column(5, 6, width=10)
-    writer.sheets['data'].set_column(6, 7, width=5)
-    writer.sheets['data'].set_column(7, 8, width=25)
-    writer.sheets['data'].set_column(8, 9, width=10)
-    writer.sheets['data'].set_column(9, 10, width=11)
-    writer.sheets['data'].set_column(10, 11, width=13)
-    writer.sheets['data'].set_column(11, 12, width=19)
-    writer.sheets['data'].set_column(12, 13, width=19)
-    writer.sheets['data'].set_column(13, 14, width=67)
+    writer.sheets['data'].set_column(4, 5, width=8)
+    writer.sheets['data'].set_column(5, 6, width=4)
+    writer.sheets['data'].set_column(6, 7, width=20)
+    writer.sheets['data'].set_column(7, 8, width=6)
+    writer.sheets['data'].set_column(8, 9, width=23)
+    writer.sheets['data'].set_column(9, 10, width=13)
+    writer.sheets['data'].set_column(10, 11, width=11)
+    writer.sheets['data'].set_column(11, 12, width=12)
+    writer.sheets['data'].set_column(12, 13, width=15)
+    writer.sheets['data'].set_column(13, 14, width=15)
+    writer.sheets['data'].set_column(14, 15, width=67)
     writer.close()
     print(f'Все сохранено в {filename}.xlsx\n')
 
