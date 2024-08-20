@@ -1,8 +1,10 @@
-# Парсер Wildberries # Парсим Вайлдберриз # сбор данных по API Wildberies
+Парсер Wildberries # Парсим Вайлдберриз # сбор данных по API Wildberies
 
 Запустил парсер Wildberries бот в телеграм: https://t.me/wildberries_scraping_bot
 
 ОБНОВЛЕН: на 20.08.2024 работает исправно!
+
+# Парсер wildberries по ссылке на каталог (указывать без фильтров)
 
 https://vk.com/parsers_wildberries  # группа ВК парсера ВБ
 
@@ -10,7 +12,6 @@ https://vk.com/happython  # группа ВК где можете заказыв
 
 https://happypython.ru/2022/07/21/parser-wildberries/  # ссылка на обучающую статью парсинга WB
 
-Парсер wildberries по ссылке на каталог (указывать без фильтров)
 
 Возможные фильтра(для ручного ввода): 
     -нижняя цена
