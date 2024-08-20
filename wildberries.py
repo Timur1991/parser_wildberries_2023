@@ -7,12 +7,12 @@ from retry import retry
 # pip install xlsxwriter
 
 """
-ОБНОВЛЕН: 18.12.2023 (статус "работает" - добавлены новые поля данных, улучшен вывод данных в excel)
-ОБНОВЛЕН: 28.08.2023 (сменилась ссылка на каталог)
+ОБНОВЛЕН: на 20.08.2024 работает исправно!
+
 
 https://vk.com/parsers_wildberries  # группа ВК парсера ВБ
 https://vk.com/happython  # группа ВК где можете заказывать парсеры и скрипты
-https://happypython.ru/2022/07/21/парсер-wildberries/  # ссылка на обучающую статью парсинга WB
+https://happypython.ru/2022/07/21/parser-wildberries/  # ссылка на обучающую статью парсинга WB
 
 Парсер wildberries по ссылке на каталог (указывать без фильтров)
 
@@ -41,7 +41,8 @@ def get_catalogs_wb() -> dict:
     """получаем полный каталог Wildberries"""
     # url = 'https://www.wildberries.ru/webapi/menu/main-menu-ru-ru.json'   # устарела ссылка апи
     # url = 'https://static-basket-01.wb.ru/vol0/data/main-menu-ru-ru-v2.json'   # устарела ссылка апи
-    url = 'https://static-basket-01.wbbasket.ru/vol0/data/main-menu-ru-ru-v2.json'
+    # url = 'https://static-basket-01.wbbasket.ru/vol0/data/main-menu-ru-ru-v2.json'   # устарела ссылка апи
+    url = 'https://static-basket-01.wbbasket.ru/vol0/data/main-menu-ru-ru-v3.json'
     headers = {'Accept': '*/*', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
     # with open('wb_goods_list.json', 'w', encoding='UTF-8') as file:
     #     json.dump(requests.get(url, headers=headers).json(), file, indent=4, ensure_ascii=False)
@@ -174,7 +175,7 @@ def parser(url: str, low_price: int = 1, top_price: int = 1000000, discount: int
         # поиск введенной категории в общем каталоге
         category = search_category_in_catalog(url=url, catalog_list=catalog_data)
         data_list = []
-        for page in range(1, 51):  # вб отдает 50 страниц товара (раньше было 100)
+        for page in range(1, 101):  # вб отдает 50 страниц товара (раньше было 100)
             data = scrap_page(
                 page=page,
                 shard=category['shard'],
@@ -200,31 +201,33 @@ def parser(url: str, low_price: int = 1, top_price: int = 1000000, discount: int
 if __name__ == '__main__':
     """данные для теста. собераем товар с раздела велосипеды в ценовой категории от 1тыс, до 100тыс, со скидкой 10%"""
     # url = 'https://www.wildberries.ru/catalog/sport/vidy-sporta/velosport/velosipedy'
-    url = 'https://www.wildberries.ru/catalog/elektronika/planshety'  # сюда вставляем вашу ссылку на категорию
-    low_price = 100  # нижний порог цены
-    top_price = 1000000  # верхний порог цены
-    discount = 10  # скидка в %
-    start = datetime.datetime.now()  # запишем время старта
 
-    parser(url=url, low_price=low_price, top_price=top_price, discount=discount)
 
-    end = datetime.datetime.now()  # запишем время завершения кода
-    total = end - start  # расчитаем время затраченное на выполнение кода
-    print("Затраченное время:" + str(total))
+    # url = 'https://www.wildberries.ru/catalog/elektronika/planshety'  # сюда вставляем вашу ссылку на категорию
+    # low_price = 10000  # нижний порог цены
+    # top_price = 15000  # верхний порог цены
+    # discount = 0  # скидка в % поиск идут от N-ой скидки и выше
+    # start = datetime.datetime.now()  # запишем время старта
+    #
+    # parser(url=url, low_price=low_price, top_price=top_price, discount=discount)
+    #
+    # end = datetime.datetime.now()  # запишем время завершения кода
+    # total = end - start  # расчитаем время затраченное на выполнение кода
+    # print("Затраченное время:" + str(total))
 
     # """для exe приложения(чтобы сделать exe файл - pip install auto_py_to_exe для установки, для запуска auto-py-to-exe)"""
-    # while True:
-    #     try:
-    #         print('По вопросу парсинга Wildberries, отзывам и предложениям пишите в https://vk.com/happython')
-    #         print('Заказать разработку парсера Вайлдберрис:  https://vk.com/atomnuclear'
-    #               '\nИли в группу ВК: https://vk.com/parsers_wildberries (рекомендую подписаться)\n')
-    #         url = input('Введите ссылку на категорию без фильтров для сбора(или "q" для выхода):\n')
-    #         if url == 'q':
-    #             break
-    #         low_price = int(input('Введите минимальную сумму товара: '))
-    #         top_price = int(input('Введите максимульную сумму товара: '))
-    #         discount = int(input('Введите минимальную скидку(введите 0 если без скидки): '))
-    #         parser(url=url, low_price=low_price, top_price=top_price, discount=discount)
-    #     except:
-    #         print('произошла ошибка данных при вводе, проверте правильность введенных данных,\n'
-    #               'Перезапуск...')
+    while True:
+        try:
+            print('По вопросу парсинга Wildberries, отзывам и предложениям пишите в https://vk.com/happython')
+            print('Заказать разработку парсера Вайлдберрис:  https://vk.com/atomnuclear'
+                  '\nИли в группу ВК: https://vk.com/parsers_wildberries (рекомендую подписаться)\n')
+            url = input('Введите ссылку на категорию без фильтров для сбора(или "q" для выхода):\n')
+            if url == 'q':
+                break
+            low_price = int(input('Введите минимальную сумму товара: '))
+            top_price = int(input('Введите максимульную сумму товара: '))
+            discount = int(input('Введите минимальную скидку(введите 0 если без скидки): '))
+            parser(url=url, low_price=low_price, top_price=top_price, discount=discount)
+        except:
+            print('произошла ошибка данных при вводе, проверте правильность введенных данных,\n'
+                  'Перезапуск...')
