@@ -7,9 +7,9 @@ from retry import retry
 # pip install xlsxwriter
 
 """
-ОБНОВЛЕН: на 20.08.2024 работает исправно!
+ОБНОВЛЕН: на 28.11.2024 работает исправно!
 
-
+Канал разработки парсеров ВБ: https://t.me/timur_parsing_blog
 https://vk.com/parsers_wildberries  # группа ВК парсера ВБ
 https://vk.com/happython  # группа ВК где можете заказывать парсеры и скрипты
 https://happypython.ru/2022/07/21/parser-wildberries/  # ссылка на обучающую статью парсинга WB
